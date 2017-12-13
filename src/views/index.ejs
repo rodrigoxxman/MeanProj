@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Authentication with Node</title>
+	<% include partials/head %>
+	<style>
+        body{background-image:url('http://verdewall.com/wp-content/uploads/2017/05/White-Background-527.jpg');}
+        .card{opacity:0.8,
+              color:gray;}
+    </style>
+</head>
+<body>
+
+	<div class="container">
+	    <br>
+	    <br>
+		<div class="card text-center mt-5">
+			<div class="card-body">
+				<h1><span class="fa fa-block"></span>Venta de Tickets</h1>
+				<p>Logeate o Registrate con:</p>
+				<a href="/login" class="btn btn-light">
+					<span class="fa fa-user"></span> Login</a>
+				<a href="/signup" class="btn btn-light">
+					<span class="fa fa-user"></span> Signup</a>
+                
+				<a href="/auth/google" class="btn btn-danger">
+					<span class="fa fa-google-plus"></span> Google</a>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

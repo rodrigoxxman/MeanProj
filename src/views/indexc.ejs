@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="http://angularjs.org/css/bootstrap.min.css"> 
+    <style>
+    html img{ 
+        width: 200px; 
+        height: 150px; }
+        button{
+            color: black;
+        }
+        #carro{
+            position: sticky;
+            top: 0;
+        }
+        #pagar{
+            margin-left: 30%;
+        }
+    </style>   
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">    
+    
+    
+<div data-ng-app="MiCarrito">
+    <div class="well container-fluid" ng-controller="CarritoController">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-5">
+                <h1>{{titulo}}</h1>
+                <h3>Productos</h3>
+                <div class="well span3" ng-repeat="producto in productos">
+                    <h4>{{producto.Producto}}</h4>
+                    <img class="" title="{{producto.Producto}}" 
+                    src="{{producto.Imagen}}" />
+                    <button class="btn btn-primary" ng-click="agregar(producto)"> 
+                        <i class="icon-plus-sign"></i>
+                        Precio: {{formatoMoneda(producto.Precio)}}
+                    </button>
+                </div>
+            </div>
+            
+            <div class="col-sm-7">
+                <div id="carro">
+                <h3>Carrito</h3>
+        
+                <table class="table table-striped">
+                    <caption>Carrito</caption>
+                    <thead>
+                        <tr>
+                            <th class="span1">Id</th>
+                            <th class="span5">Nombre</th>
+                            <th class="span2">Cantidad</th>
+                            <th class="span2">Precio</th>
+                            <th class="span2">Precio Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="well" ng-repeat="item in carrito">
+                            <td>{{item.Producto.Id}}</td>
+                            <td>{{item.Producto.Producto}}</td>
+                            <td>
+                                <input type="text" ng-model="item.Cantidad" />
+                            </td>
+                            <td> {{formatoMoneda(item.Producto.Precio)}}</td>
+                            <td> {{formatoMoneda(item.Cantidad * item.Producto.Precio)}}</td>
+                        </tr>
+                        <div>
+                         
+                        Pagar<h3>Total: S./ {{ getTotal() }}</h3>
+                        <form action="/charge" method="post">
+                            <script 
+                            src = "https://checkout.stripe.com/checkout.js" 
+                            class = "stripe-button" 
+                            data-key = "pk_test_k3J3jwM7lpHGv5MRUl9Zsu3G"
+                            data-amount = getTotal()
+                            data-name = "Ticket-Mundial"
+                            data-description = "Compra de tickets de futbol"
+                            data-locale = "auto"
+                            data-currency = "gbp"> 
+                            </script>
+                        </form>
+                        </div>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+            </div>
+            
+            <br/>
+                
+        </div>
+    </div>
+</div>
+
+<!--angular-->
+<script>
+    var miCarrito = angular.module("MiCarrito", []);
+
+miCarrito.controller(
+    'CarritoController', ['$scope',
+
+function ($scope) {
+    $scope.titulo = "Compra de Tickets";
+    $scope.carrito = [];
+    
+    $scope.agregar = function (p) {
+        var itemActual;
+
+        for (var i = 0; i < $scope.carrito.length; i++) {
+            if ($scope.carrito[i].Producto.Id == p.Id) {
+                itemActual = $scope.carrito[i];
+            }
+        }
+
+        if (!itemActual) {
+            $scope.carrito.push({
+                Producto: p,
+                Cantidad: 1
+            });
+        } else {
+            itemActual.Cantidad++;
+        }
+    }
+    
+    $scope.formatoMoneda = function(valor){
+        var valor = parseFloat(valor);
+        return "S/." + Math.floor(valor) + "." + (valor * 100) % 100;
+    }
+    
+    $scope.getTotal = function(){
+    var total = 0;
+    for(var i = 0; i < $scope.carrito.length; i++){
+        var carrito = $scope.carrito[i];
+        total += (carrito.Cantidad * carrito.Producto.Precio);
+    }
+    return total;
+}
+
+    $scope.productos = [{"Id": "1", "Producto": "Alemania - Perú", "Precio": "255.00", "Imagen": "https://st.depositphotos.com/1359043/3360/i/950/depositphotos_33603583-stock-photo-two-butterflies-with-flags-on.jpg"},
+{"Id": "2", "Producto": "Brasil - España", "Precio": "301.00", "Imagen": "https://previews.123rf.com/images/sunshinesmile/sunshinesmile1311/sunshinesmile131100235/23769062-Dos-mariposas-con-banderas-en-las-alas-como-s-mbolo-de-las-relaciones-de-Brasil-y-Espa-a-Foto-de-archivo.jpg"},
+{"Id": "3", "Producto": "Argentina - Suiza", "Precio": "220.00", "Imagen": "https://st.depositphotos.com/1359043/4091/i/950/depositphotos_40911177-stock-photo-butterflies-with-argentina-and-switzerland.jpg"},
+{"Id": "4", "Producto": "Bélgica - Colombia", "Precio": "150.00", "Imagen": "https://st.depositphotos.com/1359043/4032/i/950/depositphotos_40329403-stock-photo-butterflies-with-belgium-and-columbia.jpg"},
+{"Id": "5", "Producto": "Francia - Uruguay", "Precio": "170.00", "Imagen": "https://st.depositphotos.com/1359043/4807/i/950/depositphotos_48077379-stock-photo-butterflies-with-uruguay-and-france.jpg"},
+{"Id": "6", "Producto": "Portugal - México", "Precio": "215.00", "Imagen": "http://st.depositphotos.com/1359043/4138/i/950/depositphotos_41386865-stock-photo-butterflies-with-portugal-and-mexico.jpg"},
+{"Id": "7", "Producto": "Rusia - Suecia", "Precio": "128.00", "Imagen": "https://st.depositphotos.com/1359043/3986/i/950/depositphotos_39864735-stock-photo-two-butterflies-with-flags-of.jpg"},
+{"Id": "8", "Producto": "Polonia - Croacia", "Precio": "99.00", "Imagen": "http://st.depositphotos.com/1359043/4215/i/950/depositphotos_42158581-stock-photo-two-butterflies-with-flags-of.jpg"}];
+
+}]);
+    </script>
+</body>
+</html>

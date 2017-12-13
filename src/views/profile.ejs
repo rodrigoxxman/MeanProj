@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Profile Page</title>
+    <% include partials/head %>
+  </head>
+  <body>
+    <div class="container">
+      <header class="text-center">
+        <h1>Perfil</h1>
+        <a href="/logout" class="btn btn-dark btn-sm">
+          Logout
+        </a>
+      </header>
+      <hr>
+      <div class="container">
+      <div class="row">
+       <!-- Informacion Local -->
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title"><span class="fa fa-user"></span> Local</h3>
+              <p>
+                <strong>id</strong> : <%= user._id %> <br>
+                <strong>email</strong> : <%= user.local.email %> <br>
+                <strong>password</strong> : <%= user.local.password %>
+              </p>
+              <br>
+              <br>
+        
+        <!-- Informacion google -->
+              <h3 class="card-title"><span class="fa fa-google-plus"></span>Google</h3>
+              <p>
+                <strong>id</strong> : <%= user.google.id %> <br>
+                <strong>token</strong> : <%= user.google.token %> <br>
+                <strong>email</strong> : <%= user.google.email %> <br>
+                <strong>name</strong> : <%= user.google.name %>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+           <div class="card">
+           <div class="card-body">
+           <h1>Compra de Tickets</h1>
+           <h4>Haga Click aqui para Ingresar</h4>
+            <a href="indexc" class="btn btn-dark btn-sm">
+          Ingresar
+        </a>
+            </div>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
